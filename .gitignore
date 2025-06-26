@@ -1,0 +1,24 @@
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+
+# Ignore build and compilation files
+build/
+dist/
+node_modules/
+
+# Ignore logs and temporary files
+logs/
+tmp/
+*.log
+*.tmp
+
+# Ignore Electron-specific files
+.electron/
+electron-debug.log
+
+# Ignore Webpack-specific files
+.webpack/
