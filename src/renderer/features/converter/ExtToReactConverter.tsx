@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
-import { parseExtJSCode } from '../ext-parser/parser';
-import { generateJSXCode } from '../ext-parser/generator';
-import { ParsedComponent } from '../ext-parser/types';
 import { Toast } from 'primereact/toast';
 import './styles.css';
+import { mapExtInputComponent } from '../../../features/ext-parser/componentMapper';
+import { generateJSXCode } from '../../../features/ext-parser/generator';
 
 interface OutputBlock {
   extCode: string;
@@ -20,10 +19,16 @@ export default function ExtToReactConverter() {
 
   const handleConvert = () => {
     try {
-      const parsed: ParsedComponent[] = parseExtJSCode(extCode);
-      const jsx = parsed.map((c) => generateJSXCode(c)).join('\n\n');
+      const extConfig = JSON.parse(extCode);
+      const mapped = mapExtInputComponent(extConfig);
 
-      setHistory([...history, { extCode, jsxCode: jsx }]);
+      if (mapped) {
+        const jsx = generateJSXCode(mapped);
+        setHistory([...history, { extCode, jsxCode: jsx }]);
+      } else {
+        setHistory([...history, { extCode, jsxCode: '// No matching component found.' }]);
+      }
+
       setExtCode('');
 
       setTimeout(() => {

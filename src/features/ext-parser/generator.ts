@@ -1,16 +1,14 @@
-import { ReactComponentMapping } from "./types";
+import { ReactComponentMapping } from './componentMapper';
 
 export function generateJSXCode(component: ReactComponentMapping): string {
   const { tag, props, events, label } = component;
 
   const propStr = Object.entries(props || {})
-    .map(([key, value]) => {
-      if (typeof value === 'string' && !value.startsWith('{')) {
-        return `${key}="${value}"`;
-      } else {
-        return `${key}={${value}}`;
-      }
-    })
+    .map(([key, value]) =>
+      typeof value === 'string' && !value.startsWith('{')
+        ? `${key}="${value}"`
+        : `${key}={${value}}`
+    )
     .join(' ');
 
   const eventStr = Object.entries(events || {})
