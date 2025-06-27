@@ -22,3 +22,6 @@ electron-debug.log
 
 # Ignore Webpack-specific files
 .webpack/
+
+# Ignore test coverage
+coverage

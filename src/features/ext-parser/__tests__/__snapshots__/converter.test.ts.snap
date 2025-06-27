@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ExtJS to React JSX Generator - Full Output + Edge Case Tests should match snapshot for full input 1`] = `
+"<div className="p-field">
+  <label htmlFor="username">Username</label>
+  <InputText name="username" placeholder="Enter username" id="username" onChange={onUsernameChange} />
+</div>"
+`;

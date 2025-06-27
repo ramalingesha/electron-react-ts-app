@@ -1,9 +1,14 @@
-import { ReactComponentMapping } from './componentMapper';
+import { ReactComponentMapping } from "../../renderer/features/ext-parser/types";
 
 export function generateJSXCode(component: ReactComponentMapping): string {
-  const { tag, props, events, label } = component;
+  const { tag, props = {}, events = {}, label } = component;
 
-  const propStr = Object.entries(props || {})
+  const id = props.id || props.name || 'field';
+  if (!props.id) {
+    props.id = id;
+  }
+
+  const propStr = Object.entries(props)
     .map(([key, value]) =>
       typeof value === 'string' && !value.startsWith('{')
         ? `${key}="${value}"`
@@ -11,14 +16,14 @@ export function generateJSXCode(component: ReactComponentMapping): string {
     )
     .join(' ');
 
-  const eventStr = Object.entries(events || {})
+  const eventStr = Object.entries(events)
     .map(([key, handler]) => `${key}={${handler}}`)
     .join(' ');
 
-  const inputLine = `<${tag} ${propStr} ${eventStr} />`;
+  const parts = [propStr, eventStr].filter(Boolean).join(' ');
+  const inputLine = `<${tag} ${parts} />`;
 
   if (label) {
-    const id = props.id || props.name || 'field';
     return [
       `<div className="p-field">`,
       `  <label htmlFor="${id}">${label}</label>`,
@@ -27,5 +32,5 @@ export function generateJSXCode(component: ReactComponentMapping): string {
     ].join('\n');
   }
 
-  return inputLine;
+  return inputLine.trim();
 }

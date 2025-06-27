@@ -26,7 +26,7 @@ export interface ExtComponent {
 
 export interface ReactComponentMapping {
   tag: string;
-  props: Record<string, string | number | boolean>;
-  events: Record<string, string>;
+  props?: Record<string, string | number | boolean>;
+  events?: Record<string, string>;
   label?: string;
 }

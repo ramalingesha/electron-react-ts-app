@@ -1,9 +1,9 @@
 import { ReactComponentMapping } from "./types";
 
 export function generateJSXCode(component: ReactComponentMapping): string {
-  const { tag, props, events, label } = component;
+  const { tag, props = {}, events = {}, label } = component;
 
-  const propStr = Object.entries(props || {})
+  const propStr = Object.entries(props)
     .map(([key, value]) => {
       if (typeof value === 'string' && !value.startsWith('{')) {
         return `${key}="${value}"`;
@@ -13,7 +13,7 @@ export function generateJSXCode(component: ReactComponentMapping): string {
     })
     .join(' ');
 
-  const eventStr = Object.entries(events || {})
+  const eventStr = Object.entries(events)
     .map(([key, handler]) => `${key}={${handler}}`)
     .join(' ');
 
