@@ -1,4 +1,4 @@
-import { ReactComponentMapping } from "../../renderer/features/ext-parser/types";
+import { ReactComponentMapping } from "./types";
 
 export function generateJSXCode(component: ReactComponentMapping): string {
   const { tag, props = {}, events = {}, label } = component;

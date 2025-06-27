@@ -3,8 +3,9 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import './styles.css';
-import { mapExtInputComponent } from '../../../features/ext-parser/componentMapper';
-import { generateJSXCode } from '../../../features/ext-parser/generator';
+import { mapExtInputComponent } from '../ext-parser/componentMapper';
+import { generateJSXCode } from '../ext-parser/generator';
+import { ExtFileUploader } from './ExtFileUploader'; // <-- import uploader
 
 interface OutputBlock {
   extCode: string;
@@ -22,13 +23,11 @@ export default function ExtToReactConverter() {
       const extConfig = JSON.parse(extCode);
       const mapped = mapExtInputComponent(extConfig);
 
-      if (mapped) {
-        const jsx = generateJSXCode(mapped);
-        setHistory([...history, { extCode, jsxCode: jsx }]);
-      } else {
-        setHistory([...history, { extCode, jsxCode: '// No matching component found.' }]);
-      }
+      const jsx = mapped
+        ? generateJSXCode(mapped)
+        : '// No matching component found.';
 
+      setHistory([...history, { extCode, jsxCode: jsx }]);
       setExtCode('');
 
       setTimeout(() => {
@@ -62,6 +61,24 @@ export default function ExtToReactConverter() {
     }
   };
 
+  const handleFileConverted = (extCode: string, convertedJSX: string) => {
+    setHistory([...history, { extCode, jsxCode: convertedJSX }]);
+
+    toastRef.current?.show({
+      severity: 'success',
+      summary: 'File Converted',
+      detail: 'JSX generated from uploaded file',
+      life: 3000
+    });
+
+    setTimeout(() => {
+      outputRef.current?.scrollTo({
+        top: outputRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }, 100);
+  };
+
   return (
     <div className="converter-container">
       <h2>Ext JS to React Migrator</h2>
@@ -88,7 +105,8 @@ export default function ExtToReactConverter() {
           ))}
         </div>
 
-        <div className="input-box">
+        <div className="input-box" style={{ position: 'relative' }}>
+          <ExtFileUploader onFileConverted={handleFileConverted} />
           <InputTextarea
             value={extCode}
             onChange={(e) => setExtCode(e.target.value)}
